@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<form action="/new" method="POST">
+    <label>Fecha</label>
+    <input type="date" name="date">
+    <label>Concepto</label>
+    <input type="text" name="Concept" placeholder="Ingrese un concepto">
+    <label for>Monto</label>
+    <input type="number" name="quantity" placeholder="Ingrese un monto" step="0.01">
+    
+    <button type="submit">Guardar</button>
+  
+  </form>
+{% endblock %}
