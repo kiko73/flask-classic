@@ -1,7 +1,8 @@
 import sqlite3
+from registros_ig import ORIGIN_DATA
 
 def seletc_all():
-    conexion = sqlite3.connect("data/movimientos.sqlite")
+    conexion = sqlite3.connect(ORIGIN_DATA)
     cur = conexion.cursor()
     res = cur.execute("select * from movements;")
     filas = res.fetchall()
@@ -23,11 +24,19 @@ def seletc_all():
 
 
 def insert(registroForm):
-    conexion = sqlite3.connect("data/movimientos.sqlite")
+    conexion = sqlite3.connect(ORIGIN_DATA)
     cur = conexion.cursor()
     res = cur.execute("insert into movements (date,concept,quantity) values (?,?,?);",registroForm)
 
     conexion.commit()
 
     conexion.close()
+
+def select_by(id):
+    conexion = sqlite3.connect(ORIGIN_DATA)
+    cur = conexion.cursor()
+    res = cur.execute(f"select * from movements where id={id};")
+    result = res.fetchall()
+    return result[0]
+    
 
