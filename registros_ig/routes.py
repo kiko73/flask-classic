@@ -1,7 +1,7 @@
 from registros_ig import app
 from flask import render_template,request,redirect,flash
 from registros_ig.models import *
-from datetime import date
+from datetime import date,datetime
 from registros_ig.forms import MovementsForm
 
 def validarFormulario(datosFormulario):
@@ -19,7 +19,9 @@ def validarFormulario(datosFormulario):
 @app.route("/")
 def index():
     dic = seletc_all()
-    return render_template("index.html",datos = dic)
+    ganancia=select_ingreso()
+    gastos=select_egreso()
+    return render_template("index.html",datos = dic,ingreso=ganancia, egreso=gastos)
 
 @app.route("/new", methods= ["GET","POST"])
 def create():
@@ -29,9 +31,9 @@ def create():
         return render_template("create.html", dataForm=form)
     else:
         if form.validate_on_submit():
-            insert([request.form['date'],
-                request.form['concept'],
-                request.form['quantity']
+            insert([form.date.data.isoformat(),
+                    form.concept.data,
+                    form.quantity.data
                 ])
             flash("Movimiento registrado correctamente")
             return redirect("/")
@@ -53,9 +55,21 @@ def remove(id):
     
 @app.route("/update/<int:id>",methods=["GET","POST"])
 def update(id):
+    form = MovementsForm()
     if request.method == "GET":
-        return "mostrar el formulario"
+        resultado = select_by(id)
+
+        form.date.data = datetime.strptime(resultado[1],"%Y-%m-%d")
+        form.concept.data = resultado[2]
+        form.quantity.data = resultado[3]
+
+        return render_template("update.html", dataForm=form,idForm= id)
     else:
-        return "editar este registro"
+        update_by(id,[form.date.data.isoformat(),
+                      form.concept.data,
+                      form.quantity.data
+                      ])
+        flash("Movimiento actualizado correctamente")
+        return redirect("/")
                             
 
