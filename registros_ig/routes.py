@@ -1,7 +1,8 @@
 from registros_ig import app
-from flask import render_template,request,redirect
+from flask import render_template,request,redirect,flash
 from registros_ig.models import *
 from datetime import date
+from registros_ig.forms import MovementsForm
 
 def validarFormulario(datosFormulario):
     errores =[]#crear lista para guardar errores
@@ -22,19 +23,21 @@ def index():
 
 @app.route("/new", methods= ["GET","POST"])
 def create():
-    if request.method == "GET":
-        return render_template("create.html", dataForm={})
-    else:
-        errores = validarFormulario(request.form)
-        if errores:
-            return render_template("create.html", errors = errores,dataForm = request.form)
-        
-        insert([request.form['date'],
-               request.form['concept'],
-               request.form['quantity']
-               ])
+    form = MovementsForm()
 
-        return redirect("/")
+    if request.method == "GET":
+        return render_template("create.html", dataForm=form)
+    else:
+        if form.validate_on_submit():
+            insert([request.form['date'],
+                request.form['concept'],
+                request.form['quantity']
+                ])
+            flash("Movimiento registrado correctamente")
+            return redirect("/")
+        else:
+            return render_template("create.html",dataForm=form)
+        
     
 @app.route("/delete/<int:id>",methods=["GET","POST"])
 def remove(id):
@@ -44,7 +47,15 @@ def remove(id):
     else:
         #return "registro para eliminar"
         delete_by(id)
+        flash("Movimiento borrado correctamente")
 
         return redirect("/")
+    
+@app.route("/update/<int:id>",methods=["GET","POST"])
+def update(id):
+    if request.method == "GET":
+        return "mostrar el formulario"
+    else:
+        return "editar este registro"
                             
 

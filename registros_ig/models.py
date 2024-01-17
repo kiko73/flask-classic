@@ -31,21 +31,17 @@ def insert(registroForm):
 
 
 def select_by(id):
-    conexion = sqlite3.connect(ORIGIN_DATA)
-    cur = conexion.cursor()
-    res = cur.execute(f"select * from movements where id={id};")
-    result = res.fetchall()
-    conexion.close()
+    conectarSelectBy = Conexion(f"select * from movements where id={id};")
+    result = conectarSelectBy.res.fetchall()
+    conectarSelectBy.con.close()
+
     return result[0]
 
 
 def delete_by(id):
-    conexion = sqlite3.connect(ORIGIN_DATA)
-    cur = conexion.cursor()
-    cur.execute(f"delete from movements where id={id};")
-    conexion.commit()
-
-    conexion.close()
+    conectDeleteBy = Conexion(f"delete from movements where id={id};")
+    conectDeleteBy.con.commit()
+    conectDeleteBy.con.close()
 
     
 

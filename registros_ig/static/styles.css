@@ -8,10 +8,22 @@ header,footer{
 body{
     min-height: 100vh;
     display: grid;
-    grid-auto-flow: auto 500px 1fr auto;
+    grid-auto-flow: auto auto 1fr auto;
     margin: 0;
 }
 
 .boton-rojo{
     background-color: #d81b60;
+}
+
+ul.errors{
+    color: red;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+ul.flashes{
+    color:greenyellow;
+    font-weight: bold;
+    font-size: 0.9em;
 }
